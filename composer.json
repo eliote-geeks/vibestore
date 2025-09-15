@@ -1,11 +1,14 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "vibestore237/platform",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "VibeStore237 - Plateforme musicale camerounaise",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "musique",
+        "vibestore237",
+        "cameroun"
     ],
     "license": "MIT",
     "require": {
@@ -15,7 +18,8 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "predis/predis": "^3.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

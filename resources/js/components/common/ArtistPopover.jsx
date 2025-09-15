@@ -162,7 +162,7 @@ const ArtistPopover = ({ artist, artistId, onFollow }) => {
                             />
                             <div className="flex-grow-1">
                                 <h6 className="mb-0 fw-bold">{artist}</h6>
-                                <p className="text-muted small mb-0">Artiste sur Reveil4Artist</p>
+                                <p className="text-muted small mb-0">Artiste sur VibeStore237</p>
                             </div>
                         </div>
 

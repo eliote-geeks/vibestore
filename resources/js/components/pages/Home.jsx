@@ -18,8 +18,8 @@ const TVHome = () => {
             title: "Diamond Platnumz - Jealous",
             artist: "Diamond Platnumz",
             type: "video",
-            url: "https://cdn.reveilartist.com/videos/diamond-platnumz-jealous.mp4",
-            thumbnail: "https://cdn.reveilartist.com/thumbnails/diamond-platnumz-jealous.jpg",
+            url: "https://cdn.vibestore237.cm/videos/diamond-platnumz-jealous.mp4",
+            thumbnail: "https://cdn.vibestore237.cm/thumbnails/diamond-platnumz-jealous.jpg",
             duration: "4:15"
         },
         {
@@ -27,8 +27,8 @@ const TVHome = () => {
             title: "Davido - Fall",
             artist: "Davido",
             type: "music",
-            url: "https://cdn.reveilartist.com/music/davido-fall.mp3",
-            thumbnail: "https://cdn.reveilartist.com/thumbnails/davido-fall.jpg",
+            url: "https://cdn.vibestore237.cm/music/davido-fall.mp3",
+            thumbnail: "https://cdn.vibestore237.cm/thumbnails/davido-fall.jpg",
             duration: "3:45"
         },
         {
@@ -36,8 +36,8 @@ const TVHome = () => {
             title: "Wizkid - Essence ft. Tems",
             artist: "Wizkid",
             type: "video",
-            url: "https://cdn.reveilartist.com/videos/wizkid-essence.mp4",
-            thumbnail: "https://cdn.reveilartist.com/thumbnails/wizkid-essence.jpg",
+            url: "https://cdn.vibestore237.cm/videos/wizkid-essence.mp4",
+            thumbnail: "https://cdn.vibestore237.cm/thumbnails/wizkid-essence.jpg",
             duration: "4:08"
         },
         {
@@ -45,8 +45,8 @@ const TVHome = () => {
             title: "Burna Boy - Last Last",
             artist: "Burna Boy",
             type: "music",
-            url: "https://cdn.reveilartist.com/music/burna-boy-last-last.mp3",
-            thumbnail: "https://cdn.reveilartist.com/thumbnails/burna-boy-last-last.jpg",
+            url: "https://cdn.vibestore237.cm/music/burna-boy-last-last.mp3",
+            thumbnail: "https://cdn.vibestore237.cm/thumbnails/burna-boy-last-last.jpg",
             duration: "3:36"
         }
     ];

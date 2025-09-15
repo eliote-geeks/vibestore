@@ -9,7 +9,7 @@ const About = () => {
                     <Col md={8}>
                         <Card className="border-0 shadow-sm">
                             <Card.Body className="p-5 text-center">
-                                <h1 className="fw-bold mb-4">À propos de Reveil4artist</h1>
+                                <h1 className="fw-bold mb-4">À propos de VibeStore237</h1>
                                 <p className="text-muted">
                                     Plateforme musicale camerounaise dédiée aux artistes locaux.
                                     Cette page sera bientôt complétée avec plus d'informations.

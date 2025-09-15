@@ -138,7 +138,7 @@ const SoundDetails = () => {
     const handleShare = async () => {
         const url = window.location.href;
         const title = `${soundData.title} par ${soundData.artist}`;
-        const text = `Découvrez ce son sur Reveil4artist`;
+        const text = `Découvrez ce son sur VibeStore237`;
 
         if (navigator.share) {
             try {

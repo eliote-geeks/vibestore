@@ -13,12 +13,12 @@ const Footer = () => {
                     <Col lg={4} md={6} className="mb-4">
                         <div className="d-flex align-items-center mb-3">
                             <img
-                                src="/images/reveilart-logo.svg"
-                                alt="reveilart"
+                                src="/images/vibestore237-logo.svg"
+                                alt="vibestore237"
                                 style={{ height: '32px', width: 'auto' }}
                                 className="me-2"
                             />
-                            <span className="fw-bold fs-4 text-white">Reveilart4artist</span>
+                            <span className="fw-bold fs-4 text-white">VibeStore237</span>
                         </div>
                         <p className="mb-3">
                             Découvrez les sons les plus authentiques du Cameroun.
@@ -79,7 +79,7 @@ const Footer = () => {
                     <Col lg={3} md={6} className="mb-4">
                         <h5>Contact</h5>
                         <ul className="list-unstyled">
-                            <li className="mb-2">Email: contact@reveilart.cm</li>
+                            <li className="mb-2">Email: contact@vibestore237.cm</li>
                             <li className="mb-2">Téléphone: +237 6XX XXX XXX</li>
                             <li className="mb-2">Douala, Cameroun</li>
                         </ul>
@@ -91,7 +91,7 @@ const Footer = () => {
                 <Row className="align-items-center">
                     <Col md={6}>
                         <p className="mb-0 small">
-                            © 2024 Reveilart4artist. Tous droits réservés.
+                            © 2024 VibeStore237. Tous droits réservés.
                         </p>
                     </Col>
                     <Col md={6} className="text-md-end">

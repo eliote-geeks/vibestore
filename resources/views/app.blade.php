@@ -8,25 +8,28 @@
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/index.jsx'])
 
-    <title>{{ config('app.name', 'RéveilArt') }} - Plateforme de Sons Urbains</title>
+    <title>{{ config('app.name', 'VibeStore237') }} - Plateforme Musicale Camerounaise</title>
 
     <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/images/vibestore237-logo.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     <!-- Meta Description -->
-    <meta name="description" content="RéveilArt - Découvrez et achetez les sons urbains les plus authentiques. Une plateforme dédiée à l'art sonore urbain avec une collection unique de sons haute qualité.">
-    <meta name="keywords" content="sons urbains, musique, audio, téléchargement, RéveilArt, street sounds, urban sounds">
+    <meta name="description" content="VibeStore237 - Découvrez la musique camerounaise. Plateforme de sons, clips et événements musicaux du Cameroun. Créateurs, artistes et producteurs réunis.">
+    <meta name="keywords" content="musique cameroun, sons, audio, vibestore237, afrobeat, makossa, bikutsi, clips, événements musicaux">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="RéveilArt - Plateforme de Sons Urbains">
-    <meta property="og:description" content="Découvrez et achetez les sons urbains les plus authentiques">
+    <meta property="og:title" content="VibeStore237 - Plateforme Musicale Camerounaise">
+    <meta property="og:description" content="Découvrez la richesse musicale du Cameroun sur VibeStore237">
     <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:image" content="{{ url('/images/vibestore237-logo.svg') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="RéveilArt - Plateforme de Sons Urbains">
-    <meta property="twitter:description" content="Découvrez et achetez les sons urbains les plus authentiques">
+    <meta property="twitter:title" content="VibeStore237 - Plateforme Musicale Camerounaise">
+    <meta property="twitter:description" content="Découvrez la richesse musicale du Cameroun sur VibeStore237">
+    <meta property="twitter:image" content="{{ url('/images/vibestore237-logo.svg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -45,7 +48,7 @@
     <noscript>
         <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark text-white">
             <div class="text-center">
-                <h1 class="display-4 mb-4">RéveilArt</h1>
+                <h1 class="display-4 mb-4">VibeStore237</h1>
                 <p class="lead">JavaScript est requis pour utiliser cette application.</p>
                 <p>Veuillez activer JavaScript dans votre navigateur et recharger la page.</p>
             </div>

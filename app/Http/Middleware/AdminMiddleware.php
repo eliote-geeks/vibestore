@@ -13,7 +13,20 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Pour l'instant, on laisse passer - à configurer plus tard
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Non authentifié'
+            ], 401);
+        }
+
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'message' => 'Accès refusé - Privilèges administrateur requis'
+            ], 403);
+        }
+
         return $next($request);
     }
 }

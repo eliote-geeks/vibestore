@@ -34,7 +34,7 @@ const Login = () => {
 
         // Simulation d'API call
         setTimeout(() => {
-            if (formData.email === 'test@reveilart4artist.com' && formData.password === 'password') {
+            if (formData.email === 'test@vibestore237.cm' && formData.password === 'password') {
                 // Redirection après connexion réussie
                 window.location.href = '/';
             } else {
@@ -216,7 +216,7 @@ const Login = () => {
                                 <div className="mt-4 p-3 bg-light rounded text-center">
                                     <small className="text-muted">
                                         <strong>Compte de test :</strong><br />
-                                        Email: test@reveilart4artist.com<br />
+                                        Email: test@vibestore237.cm<br />
                                         Mot de passe: password
                                     </small>
                                 </div>

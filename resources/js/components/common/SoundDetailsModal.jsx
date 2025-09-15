@@ -483,7 +483,7 @@ const SoundDetailsModal = ({ show, onHide, sound, onLike, onAddToCart, likedSoun
                                                     className="mb-3"
                                                 />
                                                 <h6 className="fw-bold mb-1">{sound.artist}</h6>
-                                                <p className="text-muted small mb-3">Artiste sur Reveil4Artist</p>
+                                                <p className="text-muted small mb-3">Artiste sur VibeStore237</p>
                                                 <Button variant="primary" size="sm" className="w-100" onClick={() => navigate(`/artists/${sound.artistId || sound.user_id}`)}>
                                                     Voir le profil
                                                 </Button>

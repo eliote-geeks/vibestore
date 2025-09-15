@@ -63,7 +63,7 @@ export const addSubscriptionToCart = (subscription, addToCart) => {
     const subscriptionItem = {
         ...subscription,
         type: 'subscription',
-        artist: subscription.provider || 'Reveil4artist',
+        artist: subscription.provider || 'VibeStore237',
         cover: subscription.image || '/images/subscription-default.png'
     };
     return addToCart(subscriptionItem);

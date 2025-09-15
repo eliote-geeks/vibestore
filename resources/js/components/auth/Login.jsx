@@ -66,8 +66,8 @@ const Login = () => {
                                 <div className="text-center mb-4">
                                     <div className="mb-3">
                                         <img
-                                            src="/images/reveilart-logo.svg"
-                                            alt="Reveil4artist"
+                                            src="/images/vibestore237-logo.svg"
+                                            alt="VibeStore237"
                                             height="48"
                                             className="mb-2"
                                             onError={(e) => {
@@ -83,7 +83,7 @@ const Login = () => {
                                         />
                                     </div>
                                     <h3 className="fw-bold text-dark mb-2">Connexion</h3>
-                                    <p className="text-muted">Connectez-vous à votre compte Reveil4artist</p>
+                                    <p className="text-muted">Connectez-vous à votre compte VibeStore237</p>
                                 </div>
 
                                 {/* Alert d'erreur générale */}

@@ -95,8 +95,8 @@ const Register = () => {
                                 <div className="text-center mb-4">
                                     <div className="mb-3">
                                         <img
-                                            src="/images/reveilart-logo.svg"
-                                            alt="Reveil4artist"
+                                            src="/images/vibestore237-logo.svg"
+                                            alt="VibeStore237"
                                             height="48"
                                             className="mb-2"
                                             onError={(e) => {
@@ -112,7 +112,7 @@ const Register = () => {
                                         />
                                     </div>
                                     <h3 className="fw-bold text-dark mb-2">Créer un compte</h3>
-                                    <p className="text-muted">Rejoignez la communauté Reveil4artist</p>
+                                    <p className="text-muted">Rejoignez la communauté VibeStore237</p>
                                 </div>
 
                                 {/* Alert d'erreur générale */}

@@ -73,9 +73,9 @@ const LoadingOverlay = ({ progress }) => (
             <div className="loading-logo-container">
             <div className="loading-logo">
                 <img
-                    src="/images/reveilart-logo.svg"
-                    alt="reveilart"
-                    style={{ height: '48px' }}
+                    src="/images/vibestore237-logo-simple.svg"
+                    alt="VibeStore237"
+                    style={{ height: '48px', width: '48px' }}
                     className="loading-logo-img"
                 />
             </div>
@@ -146,9 +146,9 @@ const LoadingOverlay = ({ progress }) => (
             }
 
             .loading-logo-img {
-                filter: brightness(0) invert(1);
                 opacity: 0.9;
                 display: block;
+                /* Garder les couleurs originales du logo */
             }
 
             .loading-spinner {

@@ -38,16 +38,17 @@
         "react-toastify": "^11.0.5",
         "styled-components": "^6.1.18"
     },
-    "name": "reveilart",
+    "name": "vibestore237",
     "version": "1.0.0",
-    "description": "Plateforme de sons urbains du Cameroun",
+    "description": "Plateforme musicale du Cameroun - VibeStore237",
     "keywords": [
-        "sons urbains",
         "musique",
-        "cameroun",
+        "sons",
         "audio",
+        "cameroun",
+        "vibestore",
         "marketplace"
     ],
-    "author": "L'équipe reveilart",
+    "author": "L'équipe VibeStore237",
     "license": "MIT"
 }

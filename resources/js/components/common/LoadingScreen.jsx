@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faMusic, faHeart, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
-const LoadingScreen = ({ show = false, message = "Chargement...", style = "modern" }) => {
+const LoadingScreen = ({ show = false, message = "VibeStore237 se charge...", style = "modern" }) => {
     if (!show) return null;
 
     const renderModernLoader = () => (
@@ -21,7 +21,12 @@ const LoadingScreen = ({ show = false, message = "Chargement...", style = "moder
                     <div className="pulse-ring ring-3"></div>
                 </div>
                 <div className="logo-pulse">
-                    <FontAwesomeIcon icon={faVolumeUp} className="logo-icon" />
+                    <img 
+                        src="/images/vibestore237-logo-simple.svg" 
+                        alt="VibeStore237" 
+                        className="logo-icon"
+                        style={{ width: '32px', height: '32px' }}
+                    />
                 </div>
             </div>
 
@@ -206,8 +211,7 @@ const LoadingScreen = ({ show = false, message = "Chargement...", style = "moder
                 }
 
                 .logo-icon {
-                    color: var(--primary-purple);
-                    font-size: 1.2rem;
+                    /* Pas de filtre - garder les couleurs originales du logo */
                 }
 
                 .loading-text {
