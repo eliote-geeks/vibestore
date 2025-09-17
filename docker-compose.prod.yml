@@ -8,9 +8,16 @@ services:
     container_name: vibestore_app
     restart: unless-stopped
     working_dir: /var/www/html
+    env_file:
+      - .env
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_CONNECTION=pgsql
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - ./storage:/var/www/html/storage
       - ./public/music:/var/www/html/public/music
@@ -23,9 +30,14 @@ services:
       - vibestore-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vibestore.rule=Host(`vibestordistr.com`,`www.vibestordistr.com`)"
+      - "traefik.http.routers.vibestore.rule=Host(`vibestordistr.com`) || Host(`www.vibestordistr.com`)"
       - "traefik.http.routers.vibestore.tls.certresolver=letsencrypt"
       - "traefik.http.services.vibestore.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.vibestore-http.rule=Host(`vibestordistr.com`) || Host(`www.vibestordistr.com`)"
+      - "traefik.http.routers.vibestore-http.entrypoints=web"
+      - "traefik.http.routers.vibestore-http.middlewares=redirect-to-https"
+      - "traefik.http.routers.vibestore.entrypoints=websecure"
 
   db:
     image: postgres:15-alpine
@@ -63,9 +75,16 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     command: php artisan queue:work --verbose --tries=3 --timeout=90
+    env_file:
+      - .env
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_CONNECTION=pgsql
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - ./storage:/var/www/html/storage
     depends_on:
@@ -82,9 +101,16 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     command: /bin/sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
+    env_file:
+      - .env
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_CONNECTION=pgsql
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - ./storage:/var/www/html/storage
     depends_on:
