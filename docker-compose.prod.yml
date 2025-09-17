@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vibestore237_app
+    container_name: vibestore_app
     restart: unless-stopped
     working_dir: /var/www/html
     environment:
@@ -23,13 +23,13 @@ services:
       - vibestore-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vibestore.rule=Host(`vibestore237.com`,`www.vibestore237.com`)"
+      - "traefik.http.routers.vibestore.rule=Host(`vibestordistr.com`,`www.vibestordistr.com`)"
       - "traefik.http.routers.vibestore.tls.certresolver=letsencrypt"
       - "traefik.http.services.vibestore.loadbalancer.server.port=80"
 
   db:
     image: postgres:15-alpine
-    container_name: vibestore237_db
+    container_name: vibestore_db
     restart: unless-stopped
     environment:
       - POSTGRES_DB=${DB_DATABASE}
@@ -45,7 +45,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: vibestore237_redis
+    container_name: vibestore_redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:
@@ -59,7 +59,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vibestore237_queue
+    container_name: vibestore_queue
     restart: unless-stopped
     working_dir: /var/www/html
     command: php artisan queue:work --verbose --tries=3 --timeout=90
@@ -78,7 +78,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vibestore237_scheduler
+    container_name: vibestore_scheduler
     restart: unless-stopped
     working_dir: /var/www/html
     command: /bin/sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
@@ -95,7 +95,7 @@ services:
 
   traefik:
     image: traefik:v3.0
-    container_name: vibestore237_traefik
+    container_name: vibestore_traefik
     restart: unless-stopped
     command:
       - "--api.dashboard=true"
@@ -104,7 +104,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@vibestore237.com"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@vibestordistr.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
@@ -119,7 +119,7 @@ services:
       - vibestore-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.vibestore237.com`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.vibestordistr.com`)"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.service=api@internal"
 

@@ -21,9 +21,9 @@ jobs:
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            https://${{ secrets.VPS_DOMAIN }}
-            https://${{ secrets.VPS_DOMAIN }}/login
-            https://${{ secrets.VPS_DOMAIN }}/catalog
+            https://vibestordistr.com
+            https://vibestordistr.com/login
+            https://vibestordistr.com/catalog
           configPath: './lighthouse.config.js'
           uploadArtifacts: true
           temporaryPublicStorage: true
@@ -44,7 +44,7 @@ jobs:
           # Créer un fichier de test de charge
           cat > load-test.yml << EOF
           config:
-            target: 'https://${{ secrets.VPS_DOMAIN }}'
+            target: 'https://vibestordistr.com'
             phases:
               - duration: 60
                 arrivalRate: 5

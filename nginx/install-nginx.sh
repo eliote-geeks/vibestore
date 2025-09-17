@@ -6,12 +6,12 @@
 set -e
 
 # Variables
-DOMAIN=${1:-"vibestore237.com"}
-APP_DIR="/var/www/vibestore237"
+DOMAIN=${1:-"vibestordistr.com"}
+APP_DIR="/var/www/vibestore"
 NGINX_DIR="/etc/nginx"
 SITES_AVAILABLE="$NGINX_DIR/sites-available"
 SITES_ENABLED="$NGINX_DIR/sites-enabled"
-CONFIG_DIR="$(dirname "$0")"
+CONFIG_DIR="/var/www/vibestore/nginx"
 
 # Couleurs pour les logs
 RED='\033[0;31m'
@@ -195,9 +195,9 @@ install_vibestore_configs() {
     chown -R www-data:www-data /var/cache/nginx/
     
     # Copier les configurations personnalisées
-    if [ -f "$CONFIG_DIR/vibestore237.conf" ]; then
+    if [ -f "$CONFIG_DIR/vibestore.conf" ]; then
         # Remplacer le domaine dans la configuration
-        sed "s/vibestore237\.com/$DOMAIN/g" "$CONFIG_DIR/vibestore237.conf" > "$SITES_AVAILABLE/vibestore237"
+        sed "s/vibestore\.com/$DOMAIN/g" "$CONFIG_DIR/vibestore.conf" > "$SITES_AVAILABLE/vibestore"
         log_success "Configuration principale copiée"
     else
         log_error "Fichier de configuration principal non trouvé"
@@ -216,7 +216,7 @@ install_vibestore_configs() {
     fi
     
     # Activer le site
-    ln -sf "$SITES_AVAILABLE/vibestore237" "$SITES_ENABLED/"
+    ln -sf "$SITES_AVAILABLE/vibestore" "$SITES_ENABLED/"
     
     # Désactiver le site par défaut
     if [ -L "$SITES_ENABLED/default" ]; then
@@ -230,11 +230,11 @@ setup_logging() {
     log_info "Configuration des logs..."
     
     # Créer les répertoires de logs spécialisés
-    mkdir -p /var/log/nginx/vibestore237
+    mkdir -p /var/log/nginx/vibestore
     
     # Configuration de logrotate pour VibeStore237
-    cat > /etc/logrotate.d/nginx-vibestore237 << EOF
-/var/log/nginx/vibestore237_*.log {
+    cat > /etc/logrotate.d/nginx-vibestore << EOF
+/var/log/nginx/vibestore_*.log {
     daily
     missingok
     rotate 30
@@ -275,8 +275,8 @@ setup_ssl() {
     else
         log_warning "Échec de l'obtention du certificat SSL - configuration HTTP uniquement"
         # Modifier la configuration pour HTTP uniquement
-        sed -i '/listen 443/,/}/d' "$SITES_AVAILABLE/vibestore237"
-        sed -i 's/return 301 https:/return 301 http:/' "$SITES_AVAILABLE/vibestore237"
+        sed -i '/listen 443/,/}/d' "$SITES_AVAILABLE/vibestore"
+        sed -i 's/return 301 https:/return 301 http:/' "$SITES_AVAILABLE/vibestore"
     fi
     
     # Configuration du renouvellement automatique
@@ -380,7 +380,7 @@ test_configuration() {
     fi
     
     # Vérifier les permissions
-    chown -R www-data:www-data /var/www/vibestore237 2>/dev/null || true
+    chown -R www-data:www-data /var/www/vibestore 2>/dev/null || true
     
     # Test des répertoires de cache
     if [ ! -d "/var/cache/nginx/vibestore" ]; then
@@ -422,11 +422,11 @@ create_utility_scripts() {
     cat > /usr/local/bin/vibestore-logs << 'EOF'
 #!/bin/bash
 case "$1" in
-    access) tail -f /var/log/nginx/vibestore237_access.log ;;
-    error) tail -f /var/log/nginx/vibestore237_error.log ;;
-    audio) tail -f /var/log/nginx/vibestore237_audio_access.log ;;
-    video) tail -f /var/log/nginx/vibestore237_video_access.log ;;
-    downloads) tail -f /var/log/nginx/vibestore237_downloads.log ;;
+    access) tail -f /var/log/nginx/vibestore_access.log ;;
+    error) tail -f /var/log/nginx/vibestore_error.log ;;
+    audio) tail -f /var/log/nginx/vibestore_audio_access.log ;;
+    video) tail -f /var/log/nginx/vibestore_video_access.log ;;
+    downloads) tail -f /var/log/nginx/vibestore_downloads.log ;;
     *) echo "Usage: $0 {access|error|audio|video|downloads}" ;;
 esac
 EOF
@@ -437,10 +437,10 @@ EOF
 #!/bin/bash
 echo "=== Statistiques VibeStore237 ==="
 echo "Connexions actives: $(ss -tuln | grep :80 | wc -l)"
-echo "Requêtes dernière heure: $(grep "$(date -d '1 hour ago' '+%d/%b/%Y:%H')" /var/log/nginx/vibestore237_access.log | wc -l)"
-echo "Erreurs 5xx dernière heure: $(grep "$(date -d '1 hour ago' '+%d/%b/%Y:%H')" /var/log/nginx/vibestore237_access.log | grep " 5[0-9][0-9] " | wc -l)"
+echo "Requêtes dernière heure: $(grep "$(date -d '1 hour ago' '+%d/%b/%Y:%H')" /var/log/nginx/vibestore_access.log | wc -l)"
+echo "Erreurs 5xx dernière heure: $(grep "$(date -d '1 hour ago' '+%d/%b/%Y:%H')" /var/log/nginx/vibestore_access.log | grep " 5[0-9][0-9] " | wc -l)"
 echo "Top 5 des IP: "
-grep "$(date '+%d/%b/%Y')" /var/log/nginx/vibestore237_access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -5
+grep "$(date '+%d/%b/%Y')" /var/log/nginx/vibestore_access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -5
 EOF
     chmod +x /usr/local/bin/vibestore-stats
     
@@ -449,11 +449,11 @@ EOF
 #!/bin/bash
 case "$1" in
     on)
-        touch /var/www/vibestore237/maintenance.html
+        touch /var/www/vibestore/maintenance.html
         echo "Mode maintenance activé"
         ;;
     off)
-        rm -f /var/www/vibestore237/maintenance.html
+        rm -f /var/www/vibestore/maintenance.html
         echo "Mode maintenance désactivé"
         ;;
     reload)
@@ -493,8 +493,8 @@ main() {
     log_success "🎉 Installation Nginx terminée avec succès!"
     echo
     echo "📋 Informations:"
-    echo "   - Configuration: /etc/nginx/sites-available/vibestore237"
-    echo "   - Logs: /var/log/nginx/vibestore237_*.log"
+    echo "   - Configuration: /etc/nginx/sites-available/vibestore"
+    echo "   - Logs: /var/log/nginx/vibestore_*.log"
     echo "   - Cache: /var/cache/nginx/vibestore*"
     echo
     echo "🔧 Commandes utiles:"

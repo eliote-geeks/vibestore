@@ -8,7 +8,7 @@ set -e
 echo "🔍 Installation du monitoring VibeStore237..."
 
 # Variables
-APP_DIR="/var/www/vibestore237"
+APP_DIR="/var/www/vibestore"
 GRAFANA_PORT="3000"
 PROMETHEUS_PORT="9090"
 
@@ -88,7 +88,7 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9121']
 
-  - job_name: 'vibestore237'
+  - job_name: 'vibestore'
     metrics_path: '/metrics'
     static_configs:
       - targets: ['localhost']
@@ -97,7 +97,7 @@ EOF
     # Règles d'alerting
     sudo tee /etc/prometheus/vibestore_rules.yml > /dev/null << EOF
 groups:
-  - name: vibestore237
+  - name: vibestore
     rules:
       - alert: HighErrorRate
         expr: rate(nginx_http_requests_total{status=~"5.."}[5m]) > 0.1
@@ -373,13 +373,13 @@ setup_grafana_dashboards() {
     # Dashboard VibeStore237
     sudo mkdir -p /var/lib/grafana/dashboards
     
-    sudo tee /var/lib/grafana/dashboards/vibestore237.json > /dev/null << 'EOF'
+    sudo tee /var/lib/grafana/dashboards/vibestore.json > /dev/null << 'EOF'
 {
   "dashboard": {
     "id": null,
     "title": "VibeStore237 Dashboard",
     "description": "Monitoring complet de VibeStore237",
-    "tags": ["vibestore237", "laravel", "production"],
+    "tags": ["vibestore", "laravel", "production"],
     "timezone": "browser",
     "panels": [
       {
@@ -452,7 +452,7 @@ setup_grafana_dashboards() {
 }
 EOF
 
-    sudo chown grafana:grafana /var/lib/grafana/dashboards/vibestore237.json
+    sudo chown grafana:grafana /var/lib/grafana/dashboards/vibestore.json
     sudo systemctl restart grafana-server
     
     log_success "Dashboards Grafana configurés"

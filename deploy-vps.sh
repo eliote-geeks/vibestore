@@ -8,11 +8,11 @@ set -e
 echo "🚀 Début du déploiement VibeStore237..."
 
 # Variables (à configurer)
-DOMAIN="yourdomain.com"
+DOMAIN="vibestordistr.com"
 DB_NAME="vibestore237"
 DB_USER="vibestore_user"
-APP_DIR="/var/www/vibestore237"
-NGINX_CONFIG="/etc/nginx/sites-available/vibestore237"
+APP_DIR="/var/www/vibestore"
+NGINX_CONFIG="/etc/nginx/sites-available/vibestore"
 
 # Couleurs pour les logs
 RED='\033[0;31m'

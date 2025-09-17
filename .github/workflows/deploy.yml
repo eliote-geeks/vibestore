@@ -122,8 +122,8 @@ jobs:
             echo "🚀 Début du déploiement..."
             
             # Variables
-            APP_DIR="/var/www/vibestore237"
-            BACKUP_DIR="/var/backups/vibestore237/$(date +%Y%m%d_%H%M%S)"
+            APP_DIR="/var/www/vibestore"
+            BACKUP_DIR="/var/backups/vibestore/$(date +%Y%m%d_%H%M%S)"
             
             # Créer un backup de l'\''application actuelle
             if [ -d "$APP_DIR" ]; then
@@ -212,7 +212,7 @@ jobs:
             
             # Nettoyer les anciens backups (garder les 5 derniers)
             echo "🧹 Nettoyage des anciens backups..."
-            sudo find /var/backups/vibestore237/ -maxdepth 1 -type d -mtime +5 -exec rm -rf {} + 2>/dev/null || true
+            sudo find /var/backups/vibestore/ -maxdepth 1 -type d -mtime +5 -exec rm -rf {} + 2>/dev/null || true
             
             echo "🎉 Déploiement terminé avec succès!"
             echo "🌐 Application disponible sur: https://${{ secrets.VPS_DOMAIN }}"
@@ -256,8 +256,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} '
             echo "🔄 Rollback en cours..."
             
-            APP_DIR="/var/www/vibestore237"
-            LATEST_BACKUP=$(ls -td /var/backups/vibestore237/*/ | head -1)
+            APP_DIR="/var/www/vibestore"
+            LATEST_BACKUP=$(ls -td /var/backups/vibestore/*/ | head -1)
             
             if [ -n "$LATEST_BACKUP" ]; then
               echo "📦 Restauration depuis: $LATEST_BACKUP"
