@@ -4,7 +4,7 @@ FROM node:20-alpine AS node-builder
 # Installer les dépendances Node.js et construire les assets
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 COPY . .
 RUN npm run build
 
