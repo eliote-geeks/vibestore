@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.working
     container_name: vibestore_app
     restart: unless-stopped
     working_dir: /var/www/html
@@ -70,7 +70,7 @@ services:
   queue:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.working
     container_name: vibestore_queue
     restart: unless-stopped
     working_dir: /var/www/html
@@ -96,7 +96,7 @@ services:
   scheduler:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.working
     container_name: vibestore_scheduler
     restart: unless-stopped
     working_dir: /var/www/html
