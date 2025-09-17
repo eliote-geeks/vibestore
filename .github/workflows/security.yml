@@ -1,0 +1,86 @@
+name: 🔒 Security Checks
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 6 * * 1' # Tous les lundis à 6h
+
+jobs:
+  security-audit:
+    name: 🛡️ Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pgsql, pdo_pgsql
+
+      - name: 🛠️ Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: 🔍 PHP Security Checker
+        run: |
+          composer require --dev enlightn/security-checker
+          ./vendor/bin/security-checker security:check
+
+      - name: 📦 NPM Audit
+        run: |
+          npm ci
+          npm audit --audit-level moderate
+
+      - name: 📋 Laravel Security Check
+        run: |
+          php artisan config:clear
+          # Vérifier les configurations sensibles
+          if grep -r "APP_DEBUG=true" . --exclude-dir=vendor; then
+            echo "❌ APP_DEBUG est activé en production"
+            exit 1
+          fi
+
+      - name: 🔐 Secrets Scanner
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+
+  dependency-check:
+    name: 📦 Dependency Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Composer Audit
+        run: |
+          composer install --no-dev
+          composer audit
+
+      - name: 📊 Generate Security Report
+        run: |
+          echo "# 🔒 Rapport de Sécurité" > security-report.md
+          echo "Date: $(date)" >> security-report.md
+          echo "" >> security-report.md
+          echo "## Vulnérabilités Composer" >> security-report.md
+          composer audit --format=json > composer-audit.json || true
+          echo "" >> security-report.md
+          echo "## Vulnérabilités NPM" >> security-report.md
+          npm audit --json > npm-audit.json || true
+
+      - name: 📤 Upload Security Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-reports
+          path: |
+            security-report.md
+            composer-audit.json
+            npm-audit.json

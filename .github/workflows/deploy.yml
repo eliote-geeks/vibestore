@@ -1,0 +1,274 @@
+name: 🚀 Deploy VibeStore237
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 🧪 Tests & Quality
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vibestore_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pgsql, pdo_pgsql, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: 📥 Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: 📥 Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: 🛠️ Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: 🛠️ Install NPM dependencies
+        run: npm ci
+
+      - name: 🏗️ Build assets
+        run: npm run build
+
+      - name: 📋 Copy environment file
+        run: cp .env.example .env
+
+      - name: 🔑 Generate app key
+        run: php artisan key:generate
+
+      - name: 🗄️ Run database migrations
+        run: php artisan migrate --force
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: vibestore_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+
+      - name: 🧪 Run PHP tests
+        run: php artisan test
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: vibestore_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+
+      - name: 📊 PHP Code Quality (Laravel Pint)
+        run: ./vendor/bin/pint --test
+
+  deploy:
+    name: 🚀 Deploy to VPS
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: 🌐 Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} '
+            set -e
+            
+            echo "🚀 Début du déploiement..."
+            
+            # Variables
+            APP_DIR="/var/www/vibestore237"
+            BACKUP_DIR="/var/backups/vibestore237/$(date +%Y%m%d_%H%M%S)"
+            
+            # Créer un backup de l'\''application actuelle
+            if [ -d "$APP_DIR" ]; then
+              echo "💾 Création du backup..."
+              sudo mkdir -p "$BACKUP_DIR"
+              sudo cp -r "$APP_DIR" "$BACKUP_DIR/"
+              echo "✅ Backup créé: $BACKUP_DIR"
+            fi
+            
+            # Mettre l'\''application en mode maintenance
+            if [ -f "$APP_DIR/artisan" ]; then
+              echo "🚧 Activation du mode maintenance..."
+              cd "$APP_DIR"
+              sudo -u www-data php artisan down --retry=60 --secret="$(openssl rand -base64 32)"
+            fi
+            
+            # Créer le répertoire s'\''il n'\''existe pas
+            if [ ! -d "$APP_DIR" ]; then
+              sudo mkdir -p "$APP_DIR"
+              sudo chown www-data:www-data "$APP_DIR"
+            fi
+            
+            # Aller dans le répertoire de l'\''application
+            cd "$APP_DIR"
+            
+            # Mettre à jour le code depuis GitHub
+            echo "📥 Mise à jour du code..."
+            if [ -d ".git" ]; then
+              sudo -u www-data git fetch origin
+              sudo -u www-data git reset --hard origin/main
+            else
+              sudo -u www-data git clone https://github.com/${{ github.repository }}.git .
+            fi
+            
+            # Installer/mettre à jour les dépendances Composer
+            echo "📦 Installation des dépendances PHP..."
+            sudo -u www-data composer install --no-dev --optimize-autoloader --no-interaction
+            
+            # Installer/mettre à jour les dépendances NPM et build
+            echo "🛠️ Build des assets..."
+            sudo -u www-data npm ci --only=production
+            sudo -u www-data npm run build
+            
+            # Copier le fichier .env s'\''il n'\''existe pas
+            if [ ! -f ".env" ]; then
+              echo "⚙️ Configuration de l'\''environnement..."
+              sudo -u www-data cp .env.example .env
+              sudo -u www-data php artisan key:generate
+            fi
+            
+            # Permissions
+            echo "🔐 Configuration des permissions..."
+            sudo chown -R www-data:www-data "$APP_DIR"
+            sudo chmod -R 755 "$APP_DIR"
+            sudo chmod -R 775 "$APP_DIR/storage"
+            sudo chmod -R 775 "$APP_DIR/bootstrap/cache"
+            
+            # Migrations et optimisations
+            echo "🗄️ Migrations de base de données..."
+            sudo -u www-data php artisan migrate --force
+            
+            echo "⚡ Optimisation Laravel..."
+            sudo -u www-data php artisan config:cache
+            sudo -u www-data php artisan route:cache
+            sudo -u www-data php artisan view:cache
+            sudo -u www-data php artisan event:cache
+            
+            # Redémarrer les services
+            echo "🔄 Redémarrage des services..."
+            sudo systemctl restart php8.2-fpm
+            sudo systemctl restart nginx
+            
+            # Redémarrer le worker si il existe
+            if systemctl is-active --quiet vibestore-worker; then
+              sudo systemctl restart vibestore-worker
+            fi
+            
+            # Redémarrer websocket si il existe
+            if systemctl is-active --quiet vibestore-websocket; then
+              sudo systemctl restart vibestore-websocket
+            fi
+            
+            # Sortir du mode maintenance
+            echo "✅ Désactivation du mode maintenance..."
+            sudo -u www-data php artisan up
+            
+            # Nettoyer les anciens backups (garder les 5 derniers)
+            echo "🧹 Nettoyage des anciens backups..."
+            sudo find /var/backups/vibestore237/ -maxdepth 1 -type d -mtime +5 -exec rm -rf {} + 2>/dev/null || true
+            
+            echo "🎉 Déploiement terminé avec succès!"
+            echo "🌐 Application disponible sur: https://${{ secrets.VPS_DOMAIN }}"
+          '
+
+      - name: 🔍 Health Check
+        run: |
+          sleep 30
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.VPS_DOMAIN }})
+          if [ $response -eq 200 ]; then
+            echo "✅ Health check passed: $response"
+          else
+            echo "❌ Health check failed: $response"
+            exit 1
+          fi
+
+      - name: 📱 Notify Discord/Slack (Optional)
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Déploiement réussi - VibeStore237 mis à jour!"
+          else
+            echo "❌ Échec du déploiement - Vérification nécessaire"
+          fi
+          # Ajouter ici votre webhook Discord/Slack si nécessaire
+
+  rollback:
+    name: 🔄 Rollback
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+    needs: deploy
+    
+    steps:
+      - name: 🔐 Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: 🔄 Rollback to previous version
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} '
+            echo "🔄 Rollback en cours..."
+            
+            APP_DIR="/var/www/vibestore237"
+            LATEST_BACKUP=$(ls -td /var/backups/vibestore237/*/ | head -1)
+            
+            if [ -n "$LATEST_BACKUP" ]; then
+              echo "📦 Restauration depuis: $LATEST_BACKUP"
+              sudo rm -rf "$APP_DIR"
+              sudo cp -r "$LATEST_BACKUP/vibestore237" "/var/www/"
+              sudo chown -R www-data:www-data "$APP_DIR"
+              sudo systemctl restart php8.2-fpm nginx
+              sudo -u www-data php artisan up
+              echo "✅ Rollback terminé"
+            else
+              echo "❌ Aucun backup trouvé pour le rollback"
+              exit 1
+            fi
+          '
