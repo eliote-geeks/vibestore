@@ -38,6 +38,9 @@ services:
       - "traefik.http.routers.vibestore-http.entrypoints=web"
       - "traefik.http.routers.vibestore-http.middlewares=redirect-to-https"
       - "traefik.http.routers.vibestore.entrypoints=websecure"
+      - "traefik.http.middlewares.secure-headers.headers.forcestsheader=true"
+      - "traefik.http.middlewares.secure-headers.headers.sslredirect=true"
+      - "traefik.http.routers.vibestore.middlewares=secure-headers"
 
   db:
     image: postgres:15-alpine

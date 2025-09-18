@@ -15,14 +15,14 @@ class ForceHttps
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Force HTTPS en production
-        if (app()->environment('production') && !$request->secure()) {
-            return redirect()->secure($request->getRequestUri(), 301);
-        }
-
         // Force l'URL scheme en HTTPS pour toutes les URLs générées
         if (app()->environment('production')) {
             \URL::forceScheme('https');
+        }
+
+        // Configurer les headers de proxy pour Laravel
+        if (app()->environment('production')) {
+            $request->setTrustedProxies(['*'], \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR | \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST | \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT | \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO);
         }
 
         return $next($request);
