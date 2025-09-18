@@ -16,11 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'can_upload_clips' => \App\Http\Middleware\CanUploadClips::class,
         ]);
-        
-        // Forcer HTTPS en production
-        $middleware->web(append: [
-            \App\Http\Middleware\ForceHttps::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
